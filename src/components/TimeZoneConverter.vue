@@ -167,7 +167,7 @@ const captureSchedule = async () => {
     try {
         const canvas = await html2canvas(captureRef.value, {
             backgroundColor: '#FFFFFF',
-            scale: 2
+            scale: 4
         });
         const link = document.createElement('a');
         link.download = `schedule-${DateTime.now().toFormat('yyyyMMdd-HHmm')}.png`;
@@ -403,6 +403,7 @@ const captureSchedule = async () => {
 
             </div>
         </div>
+    </div>
 </template>
 
 <style scoped>
