@@ -167,7 +167,15 @@ const captureSchedule = async () => {
     try {
         const canvas = await html2canvas(captureRef.value, {
             backgroundColor: '#FFFFFF',
-            scale: 4
+            scale: 4,
+            useCORS: true,
+            onclone: (clonedDoc) => {
+                const clonedEl = clonedDoc.querySelector('[data-capture-target]');
+                if (clonedEl) {
+                    clonedEl.style.maxWidth = '576px'; // max-w-xl equivalent
+                    clonedEl.style.margin = '0 auto';
+                }
+            }
         });
         const link = document.createElement('a');
         link.download = `schedule-${DateTime.now().toFormat('yyyyMMdd-HHmm')}.png`;
@@ -284,7 +292,7 @@ const captureSchedule = async () => {
                                     ]" :style="getClockPosition(index)">
                                     <!-- Display Number if Major, Dot if Minor -->
                                     <span v-if="h.type === 'major'" class="cursor-pointer text-lg font-bold">{{ h.label
-                                    }}</span>
+                                        }}</span>
                                     <div v-else
                                         class="cursor-pointer w-1.5 h-1.5 rounded-full bg-slate-300 transition-colors"
                                         :class="inputHour == h.val ? 'bg-white' : ''"></div>
@@ -310,13 +318,18 @@ const captureSchedule = async () => {
 
                 <!-- Result Column (Captured) -->
                 <div class="flex-1">
-                    <div ref="captureRef" class="rounded-[2.5rem] p-8 border shadow-2xl h-full"
+                    <div ref="captureRef" data-capture-target="true"
+                        class="rounded-[2.5rem] p-8 border shadow-2xl h-full"
                         style="background-color: #ffffff; border-color: #f1f5f9; box-shadow: 0 25px 50px -12px rgba(226, 232, 240, 0.5); color: #1e293b;">
                         <div class="flex items-end justify-between mb-8 pb-6 border-b" style="border-color: #f1f5f9;">
                             <div>
-                                <h2 class="text-2xl font-bold tracking-tight" style="color: #0f172a;">Global Schedule
+                                <h2 class="text-2xl font-bold tracking-tight flex items-center gap-2"
+                                    style="color: #0f172a;">
+                                    <img src="https://flagcdn.com/w80/ng.png" alt="Nigeria"
+                                        class="w-8 h-8 rounded-full object-cover border" style="border-color: #f1f5f9;">
+                                    Nigeria
                                 </h2>
-                                <p class="font-medium text-sm mt-1" style="color: #64748b;">
+                                <p class="font-medium text-sm mt-1 pl-10" style="color: #64748b;">
                                     {{ selectedDate.toFormat('cccc, LLL dd') }}
                                 </p>
                             </div>
@@ -356,7 +369,8 @@ const captureSchedule = async () => {
                                 <!-- Middle -->
                                 <div class="ml-4 flex-1 min-w-0">
                                     <h3 class="text-sm font-bold truncate" style="color: #0f172a;">{{ item.label }}</h3>
-                                    <p class="text-xs font-medium truncate" style="color: #94a3b8;">{{ item.region }}
+                                    <p class="text-xs font-medium truncate pb-1" style="color: #94a3b8;">{{ item.region
+                                    }}
                                     </p>
                                 </div>
 
@@ -370,7 +384,7 @@ const captureSchedule = async () => {
                                         style="color: #94a3b8;">
                                         <span>{{ item.offsetLabel }}</span>
                                         <span v-if="item.dayDiffLabel" style="color: #f97316;">{{ item.dayDiffLabel
-                                            }}</span>
+                                        }}</span>
                                     </div>
                                 </div>
                             </div>
