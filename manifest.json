@@ -1,7 +1,7 @@
 {
-    "name": "RemoteCore Labs",
-    "short_name": "RemoteCore",
-    "description": "Transform your vision into reality with AI and custom software solutions from RemoteCore Labs.",
+    "name": "Time Zone Converter",
+    "short_name": "ZoneSync",
+    "description": "Convert time zones and plan meetings globally with ease.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#F4F7FE",
