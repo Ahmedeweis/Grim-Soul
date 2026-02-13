@@ -24,12 +24,11 @@ const period = ref('PM');
 // Zone Definitions
 const locations = [
     { label: 'Nigeria (Base)', zone: 'Africa/Lagos', flag: '🇳🇬', code: 'ng' },
-    { label: 'Egypt', zone: 'Africa/Cairo', flag: '🇪🇬', code: 'eg' },
     { label: 'India', zone: 'Asia/Kolkata', flag: '🇮🇳', code: 'in' },
-    { label: 'Philippines', zone: 'Asia/Manila', flag: '🇵🇭', code: 'ph' },
-    { label: 'Iran', zone: 'Asia/Tehran', flag: '🇮🇷', code: 'ir' },
-    { label: 'US (EST)', zone: 'America/New_York', flag: '🇺🇸', code: 'us' },
-    { label: 'US (PST)', zone: 'America/Los_Angeles', flag: '🇺🇸', code: 'us' },
+    { label: 'Egypt', zone: 'Africa/Cairo', flag: '��', code: 'eg' },
+    { label: 'Iraq', zone: 'Asia/Baghdad', flag: '🇮�', code: 'iq' },
+    { label: 'Germany', zone: 'Europe/Berlin', flag: '��', code: 'de' },
+    { label: 'System Time', zone: 'local', flag: '💻', code: 'un' },
 ];
 
 // --- Computed: Date Strip ---
@@ -136,7 +135,7 @@ const scheduledTimes = computed(() => {
             isBase: loc.zone === baseZone,
             dayDiffLabel,
             offsetLabel,
-            region: loc.zone.split('/')[1].replace('_', ' ')
+            region: loc.zone.includes('/') ? loc.zone.split('/')[1].replace('_', ' ') : 'Local System'
         };
     });
 });
@@ -161,6 +160,17 @@ const applyCustomDate = () => {
     }
 };
 
+const copied = ref(false);
+const copySchedule = () => {
+    const text = scheduledTimes.value
+        .map(t => `${t.flag} ${t.label}: ${t.time}`)
+        .join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+        copied.value = true;
+        setTimeout(() => copied.value = false, 2000);
+    });
+};
+
 const captureRef = ref(null);
 const captureSchedule = async () => {
     if (!captureRef.value) return;
@@ -169,6 +179,7 @@ const captureSchedule = async () => {
             backgroundColor: '#FFFFFF',
             scale: 4,
             useCORS: true,
+            ignoreElements: (element) => element.hasAttribute('data-html2canvas-ignore'),
             onclone: (clonedDoc) => {
                 const clonedEl = clonedDoc.querySelector('[data-capture-target]');
                 if (clonedEl) {
@@ -334,18 +345,37 @@ const captureSchedule = async () => {
                                 </p>
                             </div>
                             <div class="text-right flex flex-col items-end">
-                                <!-- Export Button Moved Here -->
-                                <button @click.stop="captureSchedule" data-html2canvas-ignore
-                                    class="mb-2 text-xs font-bold flex items-center gap-1 px-3 py-1.5 rounded-lg transition-colors border"
-                                    style="color: #5B4DFF; border-color: rgba(91, 77, 255, 0.1); background-color: rgba(91, 77, 255, 0.05);">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                        <polyline points="7 10 12 15 17 10" />
-                                        <line x1="12" y1="15" x2="12" y2="3" />
-                                    </svg>
-                                    Export
-                                </button>
+                                <!-- Action Buttons -->
+                                <div class="flex gap-2 mb-2" data-html2canvas-ignore>
+                                    <button @click.stop="copySchedule"
+                                        class="text-xs font-bold flex items-center gap-1 px-3 py-1.5 rounded-lg transition-colors border"
+                                        :class="copied ? 'bg-green-50 text-green-600 border-green-200' : 'bg-[#5B4DFF]/5 text-[#5B4DFF] border-[#5B4DFF]/10 hover:bg-[#5B4DFF]/10'">
+                                        <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        {{ copied ? 'Copied!' : 'Copy' }}
+                                    </button>
+
+                                    <button @click.stop="captureSchedule"
+                                        class="text-xs font-bold flex items-center gap-1 px-3 py-1.5 rounded-lg transition-colors border"
+                                        style="color: #5B4DFF; border-color: rgba(91, 77, 255, 0.1); background-color: rgba(91, 77, 255, 0.05);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="7 10 12 15 17 10" />
+                                            <line x1="12" y1="15" x2="12" y2="3" />
+                                        </svg>
+                                        Export
+                                    </button>
+                                </div>
 
                                 <span class="block text-4xl font-black" style="color: #5B4DFF;">{{
                                     scheduledTimes[0]?.time }}</span>
