@@ -25,12 +25,13 @@ const period = ref('PM');
 const locations = [
     { label: 'Nigeria (Base)', zone: 'Africa/Lagos', flag: '🇳🇬', code: 'ng' },
     { label: 'India', zone: 'Asia/Kolkata', flag: '🇮🇳', code: 'in' },
-    { label: 'Egypt', zone: 'Africa/Cairo', flag: '��', code: 'eg' },
-    { label: 'Iraq', zone: 'Asia/Baghdad', flag: '🇮�', code: 'iq' },
-    { label: 'Germany', zone: 'Europe/Berlin', flag: '��', code: 'de' },
+    { label: 'Egypt', zone: 'Africa/Cairo', flag: '🇪🇬', code: 'eg' },
+    { label: 'Iraq', zone: 'Asia/Baghdad', flag: '🇮🇶', code: 'iq' },
+    { label: 'Germany', zone: 'Europe/Berlin', flag: '🇩🇪', code: 'de' },
+    { label: 'Bangladesh', zone: 'Asia/Dhaka', flag: '🇧🇩', code: 'bd' },
+    { label: 'Indonesia', zone: 'Asia/Jakarta', flag: '🇮🇩', code: 'id' },
     { label: 'System Time', zone: 'local', flag: '💻', code: 'un' },
 ];
-
 // --- Computed: Date Strip ---
 const dateStrip = computed(() => {
     const days = [];
@@ -303,7 +304,7 @@ const captureSchedule = async () => {
                                     ]" :style="getClockPosition(index)">
                                     <!-- Display Number if Major, Dot if Minor -->
                                     <span v-if="h.type === 'major'" class="cursor-pointer text-lg font-bold">{{ h.label
-                                        }}</span>
+                                    }}</span>
                                     <div v-else
                                         class="cursor-pointer w-1.5 h-1.5 rounded-full bg-slate-300 transition-colors"
                                         :class="inputHour == h.val ? 'bg-white' : ''"></div>
@@ -400,7 +401,7 @@ const captureSchedule = async () => {
                                 <div class="ml-4 flex-1 min-w-0">
                                     <h3 class="text-sm font-bold truncate" style="color: #0f172a;">{{ item.label }}</h3>
                                     <p class="text-xs font-medium truncate pb-1" style="color: #94a3b8;">{{ item.region
-                                    }}
+                                        }}
                                     </p>
                                 </div>
 
@@ -414,7 +415,7 @@ const captureSchedule = async () => {
                                         style="color: #94a3b8;">
                                         <span>{{ item.offsetLabel }}</span>
                                         <span v-if="item.dayDiffLabel" style="color: #f97316;">{{ item.dayDiffLabel
-                                        }}</span>
+                                            }}</span>
                                     </div>
                                 </div>
                             </div>
